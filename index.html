@@ -156,6 +156,9 @@
   }
 </script>
 <link rel="stylesheet" href="css/style.css"/>
+<script>document.documentElement.classList.add('js-anim');</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 <body class="bg-gradient-to-br from-primary-fixed via-background to-secondary-fixed text-on-background font-body-md overflow-x-hidden relative min-h-screen">
 <!-- TopNavBar -->
@@ -222,13 +225,14 @@
 </div>
 </section>
 <!-- About Section -->
-<section class="fade-in-up mt-section-padding-desktop pt-12 visible" id="about">
-<h2 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-12 flex items-center gap-4">
+<section class="fade-in-up mt-section-padding-desktop pt-12 visible relative isolate" id="about">
+<div aria-hidden="true" data-parallax="0.18" class="pointer-events-none absolute -z-10 top-10 -right-24 w-80 h-80 rounded-full bg-primary/20 blur-3xl"></div>
+<h2 data-animate="title" class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-12 flex items-center gap-4">
 <span class="w-12 h-[2px] bg-primary"></span>
                 À PROPOS DE MOI
             </h2>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-<div class="space-y-6">
+<div data-animate="fade" class="space-y-6">
 <h3 class="text-headline-md font-headline-md text-on-background">Je suis <span class="text-primary">Merveille MADOUM</span>, Spécialiste Marketing</h3>
 <p class="text-body-lg font-body-lg text-on-surface-variant">
                         Passionnée par le marketing digital, je crée des stratégies innovantes pour renforcer la présence en ligne des marques. Étudiante en Master 1 Webmarketing et Social Media, j'allie créativité et analyse pour concevoir des campagnes performantes.
@@ -242,7 +246,7 @@
                         </h4>
 </div>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div data-animate="stagger" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div class="glass-card p-6 rounded-xl hover:scale-105 transition-transform duration-300 group">
 <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">design_services</span>

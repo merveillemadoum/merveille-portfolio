@@ -21,6 +21,19 @@
     display: flex;
 }
 
+/* Scroll-reveal: hide animated elements only while JS is active and GSAP will drive them.
+   If GSAP fails or the user prefers reduced motion, main.js removes .js-anim to reveal everything. */
+.js-anim [data-animate] {
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .js-anim [data-animate] {
+        opacity: 1 !important;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
 }

@@ -105,6 +105,89 @@ document.addEventListener('DOMContentLoaded', () => {
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+    // --- Scroll-reveal + parallax (GSAP ScrollTrigger) ---
+    (() => {
+        const root = document.documentElement;
+        const reveal = () => root.classList.remove('js-anim');
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Failsafe: never leave content hidden if GSAP is slow/blocked
+        const failsafe = setTimeout(reveal, 3000);
+
+        if (prefersReduced) { clearTimeout(failsafe); reveal(); return; }
+
+        const init = () => {
+            if (!window.gsap || !window.gsap.registerPlugin || !window.ScrollTrigger) {
+                clearTimeout(failsafe);
+                reveal();
+                return;
+            }
+            clearTimeout(failsafe);
+            const { gsap } = window;
+            gsap.registerPlugin(window.ScrollTrigger);
+            root.classList.remove('js-anim'); // GSAP now controls the animated elements
+
+            const revealTween = (el, vars = {}) => {
+                gsap.set(el, { opacity: 0 });
+                gsap.to(el, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.9,
+                    ease: 'power2.out',
+                    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+                    ...vars,
+                });
+            };
+
+            document.querySelectorAll('[data-animate="title"]').forEach((el) => {
+                gsap.set(el, { y: 40 });
+                revealTween(el);
+            });
+
+            document.querySelectorAll('[data-animate="fade"]').forEach((el) => {
+                gsap.set(el, { y: 40 });
+                revealTween(el, { delay: 0.1 });
+            });
+
+            document.querySelectorAll('[data-animate="stagger"]').forEach((group) => {
+                const items = group.children;
+                gsap.set(group, { opacity: 1 });
+                gsap.set(items, { opacity: 0, y: 30 });
+                gsap.to(items, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: 'power2.out',
+                    stagger: 0.12,
+                    scrollTrigger: { trigger: group, start: 'top 85%', once: true },
+                });
+            });
+
+            // Subtle parallax — element drifts slower than the scroll
+            document.querySelectorAll('[data-parallax]').forEach((el) => {
+                const strength = parseFloat(el.dataset.parallax) || 0.15;
+                gsap.to(el, {
+                    yPercent: -strength * 100,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: el.closest('section') || el,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: 0.6,
+                    },
+                });
+            });
+
+            window.ScrollTrigger.refresh();
+        };
+
+        if (window.gsap && window.ScrollTrigger) {
+            init();
+        } else {
+            window.addEventListener('load', init, { once: true });
+        }
+    })();
+
     // Contact form -> mailto (no backend required for static hosting)
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
