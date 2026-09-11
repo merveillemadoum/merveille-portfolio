@@ -38,7 +38,6 @@
     },
   };
 </script>
-<script>document.documentElement.classList.add('js-anim');</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
@@ -76,9 +75,7 @@
   @keyframes scrollcue { 0%,100% { transform: translateY(0); opacity: .35 } 50% { transform: translateY(6px); opacity: 1 } }
   .scroll-cue { animation: scrollcue 2.4s ease-in-out infinite; }
 
-  .js-anim [data-animate] { opacity: 0; will-change: opacity, transform; }
   @media (prefers-reduced-motion: reduce) {
-    .js-anim [data-animate] { opacity: 1 !important; }
     .scroll-cue { animation: none; }
   }
 </style>
@@ -303,18 +300,16 @@ Réserver une table
 
 <script>
   (function () {
-    var root = document.documentElement;
-    var reveal = function () { root.classList.remove('js-anim'); };
+    // Content is visible by default (no CSS pre-hiding). This only adds the
+    // animation on top once GSAP has actually loaded and initialized — if the
+    // CDN is slow, blocked, or errors, the page simply stays visible as-is.
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var failsafe = setTimeout(reveal, 3000);
-    if (reduced) { clearTimeout(failsafe); reveal(); return; }
+    if (reduced) return;
 
     function init() {
-      if (!window.gsap || !window.ScrollTrigger) { clearTimeout(failsafe); reveal(); return; }
-      clearTimeout(failsafe);
+      if (!window.gsap || !window.ScrollTrigger) return;
       var gsap = window.gsap;
       gsap.registerPlugin(window.ScrollTrigger);
-      root.classList.remove('js-anim');
 
       // Hero entrance (on load)
       var heroItems = document.querySelectorAll('#hero [data-animate]');

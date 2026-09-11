@@ -106,29 +106,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     // --- Scroll-reveal + parallax (GSAP ScrollTrigger) ---
+    // Content is visible by default (no CSS pre-hiding). This only adds the
+    // animation on top once GSAP has actually loaded and initialized — if the
+    // CDN is slow, blocked, or errors, the page simply stays visible as-is.
     (() => {
-        const root = document.documentElement;
-        const reveal = () => root.classList.remove('js-anim');
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        // Failsafe: never leave content hidden if GSAP is slow/blocked
-        const failsafe = setTimeout(reveal, 3000);
-
-        if (prefersReduced) { clearTimeout(failsafe); reveal(); return; }
+        if (prefersReduced) return;
 
         const init = () => {
-            if (!window.gsap || !window.gsap.registerPlugin || !window.ScrollTrigger) {
-                clearTimeout(failsafe);
-                reveal();
-                return;
-            }
-            clearTimeout(failsafe);
-            const { gsap } = window;
+            if (!window.gsap || !window.gsap.registerPlugin || !window.ScrollTrigger) return;
+            const gsap = window.gsap;
             gsap.registerPlugin(window.ScrollTrigger);
-            root.classList.remove('js-anim'); // GSAP now controls the animated elements
 
             const revealTween = (el, vars = {}) => {
-                gsap.set(el, { opacity: 0 });
+                gsap.set(el, { opacity: 0, y: 40 });
                 gsap.to(el, {
                     opacity: 1,
                     y: 0,
@@ -139,19 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             };
 
-            document.querySelectorAll('[data-animate="title"]').forEach((el) => {
-                gsap.set(el, { y: 40 });
-                revealTween(el);
-            });
-
-            document.querySelectorAll('[data-animate="fade"]').forEach((el) => {
-                gsap.set(el, { y: 40 });
-                revealTween(el, { delay: 0.1 });
-            });
+            document.querySelectorAll('[data-animate="title"]').forEach((el) => revealTween(el));
+            document.querySelectorAll('[data-animate="fade"]').forEach((el) => revealTween(el, { delay: 0.1 }));
 
             document.querySelectorAll('[data-animate="stagger"]').forEach((group) => {
                 const items = group.children;
-                gsap.set(group, { opacity: 1 });
                 gsap.set(items, { opacity: 0, y: 30 });
                 gsap.to(items, {
                     opacity: 1,
