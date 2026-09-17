@@ -1,9 +1,7 @@
 .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+    background: #F8F4EB;
+    border: 1px solid #D0C9BA;
+    box-shadow: none;
 }
 
 .fade-in-up {
@@ -26,14 +24,14 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #fcf9f8;
+    background: #fef9ed;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #cec3d2;
+    background: #D0C9BA;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #7b44aa;
+    background: #C25C3C;
 }
