@@ -664,7 +664,10 @@
 </a>
 </div>
 </div>
-<form class="glass-card p-8 rounded-xl space-y-4" data-contact-email="merveillemadoum45@gmail.com" id="contact-form">
+<form class="glass-card p-8 rounded-xl space-y-4" data-web3forms-key="109573a6-669c-4ddb-9580-e8bed58db36e" id="contact-form">
+<input name="access_key" type="hidden" value="109573a6-669c-4ddb-9580-e8bed58db36e"/>
+<input name="subject" type="hidden" value="Nouveau message depuis le portfolio"/>
+<input aria-hidden="true" class="hidden" name="botcheck" style="display:none" tabindex="-1" type="text"/>
 <div>
 <label class="text-label-bold font-label-bold text-on-background block mb-2" for="name">Nom</label>
 <input class="w-full rounded-lg border border-outline-variant/50 bg-surface px-4 py-3 text-on-background focus:outline-none focus:ring-2 focus:ring-primary" id="name" name="name" required="" type="text"/>
@@ -677,10 +680,10 @@
 <label class="text-label-bold font-label-bold text-on-background block mb-2" for="message">Message</label>
 <textarea class="w-full rounded-lg border border-outline-variant/50 bg-surface px-4 py-3 text-on-background focus:outline-none focus:ring-2 focus:ring-primary" id="message" name="message" required="" rows="4"></textarea>
 </div>
-<button class="w-full bg-secondary text-on-secondary px-8 py-4 rounded-lg font-button text-button hover:scale-105 hover:bg-secondary-light-variant transition-all duration-200 shadow-[0_4px_15px_rgba(194,92,60,0.3)]" type="submit">
+<button class="w-full bg-secondary text-on-secondary px-8 py-4 rounded-lg font-button text-button hover:scale-105 hover:bg-secondary-light-variant transition-all duration-200 shadow-[0_4px_15px_rgba(194,92,60,0.3)] disabled:opacity-60 disabled:hover:scale-100" id="contact-submit-btn" type="submit">
                             Envoyer le message
                         </button>
-<p class="text-xs text-on-surface-variant text-center">L'envoi ouvre votre application email avec le message pré-rempli.</p>
+<p class="text-xs text-on-surface-variant text-center" id="contact-form-status">Votre message m'est envoyé directement, en un clic.</p>
 </form>
 </div>
 </section>

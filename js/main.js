@@ -171,18 +171,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })();
 
-    // Contact form -> mailto (no backend required for static hosting)
+    // Contact form -> envoi direct via Web3Forms (aucun backend requis)
     const contactForm = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('contact-submit-btn');
+    const statusEl = document.getElementById('contact-form-status');
+    const defaultStatus = statusEl ? statusEl.textContent : '';
+
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            const to = contactForm.dataset.contactEmail || 'contact@example.com';
-            const subject = encodeURIComponent(`Nouveau message de ${name} via le portfolio`);
-            const body = encodeURIComponent(`${message}\n\n---\nEmail: ${email}`);
-            window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+
+            // Honeypot anti-spam : si rempli, c'est un bot -> on ignore silencieusement
+            if (contactForm.botcheck && contactForm.botcheck.value) return;
+
+            const originalLabel = submitBtn ? submitBtn.textContent : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Envoi en cours...';
+            }
+            if (statusEl) {
+                statusEl.textContent = '';
+                statusEl.classList.remove('text-error', 'text-tertiary');
+            }
+
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify(Object.fromEntries(new FormData(contactForm))),
+                });
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    contactForm.reset();
+                    if (statusEl) {
+                        statusEl.textContent = 'Message envoyé ! Je vous réponds sous 24 à 48h.';
+                        statusEl.classList.add('text-tertiary');
+                    }
+                } else {
+                    throw new Error(result.message || 'Échec de l\'envoi');
+                }
+            } catch (err) {
+                if (statusEl) {
+                    statusEl.textContent = "Une erreur est survenue. Réessayez, ou écrivez-moi directement à merveillemadoum45@gmail.com.";
+                    statusEl.classList.add('text-error');
+                }
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalLabel;
+                }
+                if (statusEl && !statusEl.textContent) statusEl.textContent = defaultStatus;
+            }
         });
     }
 });
